@@ -5,20 +5,20 @@
  */
 var combinationSum2 = function(candidates, target) {
   candidates.sort((a, b) => a - b);
-  let res = [];
-  getComb2(candidates, target, res, [], 0);
+  const res = [];
+  dfs(candidates, target, 0, [], res, new Array(candidates.length));
   return res;
 };
+var dfs = function(nums, remain, index, cur, res, used) {
+  if (remain < 0) return;
+  if (remain == 0) res.push(cur.slice());
 
-const getComb2 = function(nums, target, res, current, pos) {
-  if (target < 0) return;
-  else if (target == 0) res.push(current.slice());
-  else {
-    for (let i = pos; i < nums.length; i++) {
-      if (i > pos && nums[i] == nums[i - 1]) continue; //skip duplicates
-      current.push(nums[i]);
-      getComb2(nums, target - nums[i], res, current, i + 1);
-      current.pop();
-    }
+  for (let i = index; i < nums.length; i++) {
+    if (i > 0 && !used[i - 1] && nums[i - 1] == nums[i]) continue;
+    used[i] = true;
+    cur.push(nums[i]);
+    dfs(nums, remain - nums[i], i + 1, cur, res, used);
+    used[i] = false;
+    cur.pop(nums[i]);
   }
 };
